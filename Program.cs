@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AuthDbContext>(options => 
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
