@@ -30,9 +30,15 @@ namespace AuthService.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Bio")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -41,7 +47,21 @@ namespace AuthService.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("JoinedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -70,6 +90,9 @@ namespace AuthService.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfilePictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -97,17 +120,24 @@ namespace AuthService.Migrations
                         {
                             Id = "100",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "39e2193d-7579-44a8-9de2-009bba35585c",
+                            Bio = "I am a certified chef that works with tasty foods",
+                            ConcurrencyStamp = "500f986b-29a5-46c8-8734-cdd0b07be352",
+                            DateOfBirth = new DateTime(1992, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "wakebeh14@gmail.com",
                             EmailConfirmed = true,
-                            FullName = "Wa Kebeh Mbong",
+                            FirstName = "Wa Kebeh",
+                            Gender = "Male",
+                            JoinedDate = new DateTime(2026, 3, 3, 13, 55, 21, 316, DateTimeKind.Utc).AddTicks(2770),
+                            LastName = "Mbong",
+                            Location = "Yaounde",
                             LockoutEnabled = false,
                             NormalizedEmail = "WAKEBEH14@GMAIL.COM",
                             NormalizedUserName = "ADMIN@SYSTEM.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMOiDUY+PxfcQ91KxZj0Vpy4KbqWW3dTK7zv8itXsS2dAdg/l67YCVobWh0wGasb3Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBa5KncOUzNVK1IkmnMznvBQIJsRB+1THiwIDjoU1wpyFHdf3/g713n31nwYQRTJ2g==",
                             Phone = "676455676",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e57576d9-cc53-4d04-8097-f68e9488f7cd",
+                            ProfilePictureUrl = "myphoto.jpg",
+                            SecurityStamp = "9a062375-59c8-4eae-93d9-11fa90a37a99",
                             TwoFactorEnabled = false,
                             UserName = "admin@system.com"
                         });
@@ -141,7 +171,7 @@ namespace AuthService.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

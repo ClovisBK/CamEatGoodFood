@@ -32,7 +32,13 @@ namespace AuthService.Data
                 Email = "wakebeh14@gmail.com",
                 NormalizedEmail = "WAKEBEH14@GMAIL.COM",
                 EmailConfirmed = true,
-                FullName = "Wa Kebeh Mbong",
+                FirstName = "Wa Kebeh",
+                LastName = "Mbong",
+                Bio = "I am a certified chef that works with tasty foods",
+                Location = "Yaounde",
+                Gender = "Male",
+                ProfilePictureUrl = "myphoto.jpg",
+                DateOfBirth = new DateTime(1992, 10, 11),
                 Phone = "676455676"
             };
 
