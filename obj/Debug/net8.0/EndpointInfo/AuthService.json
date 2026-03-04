@@ -212,6 +212,30 @@
           }
         }
       }
+    },
+    "/api/IngredientUnits/Get-ingredient-units": {
+      "get": {
+        "tags": [
+          "IngredientUnits"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RecipeCategory/get-recipe-categories": {
+      "get": {
+        "tags": [
+          "RecipeCategory"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {

@@ -4,6 +4,7 @@ using AuthService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AuthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260304094206_AddedUnitsOfIngredientMeaurementTable")]
+    partial class AddedUnitsOfIngredientMeaurementTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,151 +24,6 @@ namespace AuthService.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AuthService.Models.AppModels.IngredientUnit", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Abbreviation")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<bool>("IsBaseUnit")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IngredientUnits");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Abbreviation = "g",
-                            IsBaseUnit = true,
-                            Name = "gram",
-                            Type = "weight"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Abbreviation = "kg",
-                            IsBaseUnit = false,
-                            Name = "kilogram",
-                            Type = "weight"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Abbreviation = "mg",
-                            IsBaseUnit = false,
-                            Name = "milligram",
-                            Type = "weight"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Abbreviation = "ml",
-                            IsBaseUnit = true,
-                            Name = "milliliter",
-                            Type = "volume"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Abbreviation = "L",
-                            IsBaseUnit = false,
-                            Name = "liter",
-                            Type = "volume"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Abbreviation = "tbsp",
-                            IsBaseUnit = false,
-                            Name = "tablespoon",
-                            Type = "volume"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Abbreviation = "tsp",
-                            IsBaseUnit = false,
-                            Name = "teaspoon",
-                            Type = "volume"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Abbreviation = "cup",
-                            IsBaseUnit = false,
-                            Name = "cup",
-                            Type = "volume"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Abbreviation = "pc",
-                            IsBaseUnit = true,
-                            Name = "piece",
-                            Type = "count"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Abbreviation = "med",
-                            IsBaseUnit = false,
-                            Name = "medium",
-                            Type = "count"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Abbreviation = "lg",
-                            IsBaseUnit = false,
-                            Name = "large",
-                            Type = "count"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Abbreviation = "sm",
-                            IsBaseUnit = false,
-                            Name = "small",
-                            Type = "count"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Abbreviation = "clove",
-                            IsBaseUnit = false,
-                            Name = "clove",
-                            Type = "count"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Abbreviation = "hf",
-                            IsBaseUnit = false,
-                            Name = "handful",
-                            Type = "count"
-                        });
-                });
 
             modelBuilder.Entity("AuthService.Models.AppModels.RecipeCategory", b =>
                 {
@@ -318,23 +176,23 @@ namespace AuthService.Migrations
                             Id = "100",
                             AccessFailedCount = 0,
                             Bio = "I am a certified chef that works with tasty foods",
-                            ConcurrencyStamp = "d2da5e7f-e543-4de8-a56c-66302a939f1e",
+                            ConcurrencyStamp = "5d76fa62-526f-4841-b56f-41e446c655ca",
                             DateOfBirth = new DateTime(1992, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "wakebeh14@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Wa Kebeh",
                             Gender = "Male",
-                            JoinedDate = new DateTime(2026, 3, 4, 9, 59, 52, 211, DateTimeKind.Utc).AddTicks(9513),
+                            JoinedDate = new DateTime(2026, 3, 4, 9, 42, 5, 722, DateTimeKind.Utc).AddTicks(7893),
                             LastName = "Mbong",
                             Location = "Yaounde",
                             LockoutEnabled = false,
                             NormalizedEmail = "WAKEBEH14@GMAIL.COM",
                             NormalizedUserName = "ADMIN@SYSTEM.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHaMDC9SemwubEuFmkO9qD4puMr4d9cUd43e5vZoGgGLaAxCmEMQ+8i6xKLtcGF1qQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIe7dbqOErkab1orwIA2klcBr7BiaApiKZI9PCtWuJXZ2Akzjp383R0VMm1sb1prYg==",
                             Phone = "676455676",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "myphoto.jpg",
-                            SecurityStamp = "8e679f41-e1b5-463b-b96f-a3c2c6bfdee4",
+                            SecurityStamp = "bca270df-117c-4541-ad38-407f48ce8aa1",
                             TwoFactorEnabled = false,
                             UserName = "admin@system.com"
                         });

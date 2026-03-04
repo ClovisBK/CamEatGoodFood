@@ -158,3 +158,4 @@ C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\bin
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\bin\Debug\net8.0\MimeKit.dll
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

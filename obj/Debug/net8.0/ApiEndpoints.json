@@ -110,5 +110,25 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AuthService.Controllers.IngredientUnitsController",
+    "Method": "GetIngredientUnits",
+    "RelativePath": "api/IngredientUnits/Get-ingredient-units",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AuthService.Controllers.RecipeCategoryController",
+    "Method": "GetRecipeCategories",
+    "RelativePath": "api/RecipeCategory/get-recipe-categories",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]

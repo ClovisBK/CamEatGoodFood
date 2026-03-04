@@ -12,6 +12,7 @@ namespace AuthService.Data
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }
+        public DbSet<IngredientUnit> IngredientUnits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -64,7 +65,24 @@ namespace AuthService.Data
                 new RecipeCategory { Id = 4, Name = "Snacks", Description = "Small bites and street food"},
                 new RecipeCategory { Id = 5, Name = "Beverages", Description = "Drinks and smoothies"}
                 );
-                    
+
+            builder.Entity<IngredientUnit>().HasData(
+                    new IngredientUnit { Id = 1, Name = "gram", Type = "weight", Abbreviation = "g", IsBaseUnit = true },
+                    new IngredientUnit { Id = 2, Name = "kilogram", Type = "weight", Abbreviation = "kg", IsBaseUnit = false },
+                    new IngredientUnit { Id = 3, Name = "milligram", Type = "weight", Abbreviation = "mg", IsBaseUnit = false },
+                    new IngredientUnit { Id = 4, Name = "milliliter", Type = "volume", Abbreviation = "ml", IsBaseUnit = true },
+                    new IngredientUnit { Id = 5, Name = "liter", Type = "volume", Abbreviation = "L", IsBaseUnit = false },
+                    new IngredientUnit { Id = 6, Name = "tablespoon", Type = "volume", Abbreviation = "tbsp", IsBaseUnit = false },
+                    new IngredientUnit { Id = 7, Name = "teaspoon", Type = "volume", Abbreviation = "tsp", IsBaseUnit = false },
+                    new IngredientUnit { Id = 8, Name = "cup", Type = "volume", Abbreviation = "cup", IsBaseUnit = false },
+                    new IngredientUnit { Id = 9, Name = "piece", Type = "count", Abbreviation = "pc", IsBaseUnit = true },
+                    new IngredientUnit { Id = 10, Name = "medium", Type = "count", Abbreviation = "med", IsBaseUnit = false },
+                    new IngredientUnit { Id = 11, Name = "large", Type = "count", Abbreviation = "lg", IsBaseUnit = false },
+                    new IngredientUnit { Id = 12, Name = "small", Type = "count", Abbreviation = "sm", IsBaseUnit = false },
+                    new IngredientUnit { Id = 13, Name = "clove", Type = "count", Abbreviation = "clove", IsBaseUnit = false },
+                    new IngredientUnit { Id = 14, Name = "handful", Type = "count", Abbreviation = "hf", IsBaseUnit = false }
+             );
+
         }
     }
 }
