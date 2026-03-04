@@ -13,6 +13,7 @@ namespace AuthService.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }
         public DbSet<IngredientUnit> IngredientUnits { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -82,6 +83,8 @@ namespace AuthService.Data
                     new IngredientUnit { Id = 13, Name = "clove", Type = "count", Abbreviation = "clove", IsBaseUnit = false },
                     new IngredientUnit { Id = 14, Name = "handful", Type = "count", Abbreviation = "hf", IsBaseUnit = false }
              );
+
+            
 
         }
     }
