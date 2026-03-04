@@ -213,6 +213,18 @@
         }
       }
     },
+    "/api/Ingredients/Get-all-ingredients": {
+      "get": {
+        "tags": [
+          "Ingredients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/IngredientUnits/Get-ingredient-units": {
       "get": {
         "tags": [
