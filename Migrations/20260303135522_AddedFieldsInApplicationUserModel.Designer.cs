@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AuthService.Migrations
 {
-    [DbContext(typeof(AuthDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20260303135522_AddedFieldsInApplicationUserModel")]
     partial class AddedFieldsInApplicationUserModel
     {

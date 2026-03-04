@@ -22,7 +22,7 @@ namespace AuthService.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IJwtService _jwtService;
-        private readonly AuthDbContext _context;
+        private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
         private readonly ILogger<AuthController> _logger;
@@ -34,7 +34,7 @@ namespace AuthService.Controllers
             IConfiguration configuration,
             IEmailService emailService,
             ILogger<AuthController> logger,
-            AuthDbContext context)
+            AppDbContext context)
         {
             _context = context;
             _userManager = userManager;

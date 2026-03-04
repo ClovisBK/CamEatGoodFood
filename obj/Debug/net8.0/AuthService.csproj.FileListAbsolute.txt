@@ -147,7 +147,6 @@ C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\obj
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\obj\Debug\net8.0\AuthServ.2ED0AEC6.Up2Date
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\obj\Debug\net8.0\AuthService.dll
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\obj\Debug\net8.0\refint\AuthService.dll

@@ -1,15 +1,17 @@
 ﻿using AuthService.Models;
+using AuthService.Models.AppModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Data
 {
-    public class AuthDbContext :IdentityDbContext<ApplicationUser>
+    public class AppDbContext :IdentityDbContext<ApplicationUser>
     {
-        public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<RecipeCategory> RecipeCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -54,6 +56,14 @@ namespace AuthService.Data
                     UserId = "100"
 
                 });
+
+            builder.Entity<RecipeCategory>().HasData(
+                new RecipeCategory {Id = 1, Name = "Soups", Description = "Traditional Cameroonian soups and delicacies"},
+                new RecipeCategory { Id = 2, Name = "Main Dishes", Description = "Complete meals for lunch and dinner"},
+                new RecipeCategory { Id = 3, Name = "Breakfast", Description = "Morning meals and small chops"},
+                new RecipeCategory { Id = 4, Name = "Snacks", Description = "Small bites and street food"},
+                new RecipeCategory { Id = 5, Name = "Beverages", Description = "Drinks and smoothies"}
+                );
                     
         }
     }
