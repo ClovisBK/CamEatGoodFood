@@ -1,6 +1,12 @@
 ﻿using System.Security.Claims;
+using System.Security.Cryptography.Pkcs;
 using AuthService.Data;
+using AuthService.DTOs.AppDtos.Category;
+using AuthService.DTOs.AppDtos.Ingredient;
+using AuthService.DTOs.AppDtos.Instruction;
+using AuthService.DTOs.AppDtos.Nutrition;
 using AuthService.DTOs.AppDtos.RecipeDto;
+using AuthService.DTOs.AppDtos.User;
 using AuthService.Models.AppModels;
 using AuthService.Services.Nutrition;
 using AuthService.Services.Nutrition.Models;
@@ -39,42 +45,69 @@ namespace AuthService.Controllers
                 .Include(r => r.Instructions)
                 .ToListAsync();
 
-            var response = recipes.Select(r => new
+            var response = new List<RecipeListResponseDto>();
+
+            foreach(var recipe in recipes)
             {
-                id = r.Id,
-                name = r.Name,
-                description = r.Description,
-                prepTimeMinutes = r.PrepTimeMinutes,
-                cookTimeMinutes = r.CookTimeMinutes,
-                servings = r.Servings,
-                imageUrl = r.ImageUrl,
-                videoUrl = r.VideoUrl,
-                category = new
+                var nutrition = _nutritionCalculator.CalculateRecipeNutrition(recipe.RecipeIngredients, recipe.Servings);
+
+                var recipeDto = new RecipeListResponseDto
                 {
-                    id = r.Category!.Id,
-                    name = r.Category.Name
-                },
-                createdBy = new
-                {
-                    id = r.CreatedBy!.Id,
-                    fullName = $"{r.CreatedBy.FirstName} {r.CreatedBy.LastName}".Trim(),
-                  
-                },
-                createdAt = r.CreatedAt,
-                instructions = r.Instructions.OrderBy(i => i.StepNumber).Select(i => new
-                {
-                    stepNumber = i.StepNumber,
-                    instruction = i.ActualInstruction,
-                    estimatedMinutes = i.EstimatedMinutes
-                }),
-                ingredients = r.RecipeIngredients.Select(ri => new
-                {
-                    ingredientName = ri.Ingredient!.Name,
-                    quantity = ri.Quantity,
-                    unit = ri.Unit!.Name,
-                    notes = ri.Notes
-                })
-            });
+                    Id = recipe.Id,
+                    Name = recipe.Name,
+                    Description = recipe.Description,
+                    PrepTimeMinutes = recipe.PrepTimeMinutes,
+                    CookTimeMinutes = recipe.CookTimeMinutes,
+                    Servings = recipe.Servings,
+                    ImageUrl = recipe.ImageUrl,
+                    VideoUrl = recipe.VideoUrl,
+                    RegionOrOrigin = recipe.RegionOfOrigin,
+                    CreatedAt = recipe.CreatedAt,
+                    Category = new CategoryDto
+                    {
+                        Id = recipe.Category!.Id,
+                        Name = recipe.Category!.Name,
+                        Description = recipe.Description
+                    },
+                    CreatedBy = new UserDto
+                    {
+                       
+                        Name = recipe.CreatedBy!.FirstName,
+                        Email = recipe.CreatedBy.Email ?? string.Empty,
+                        FullName = $"{recipe.CreatedBy.FirstName} {recipe.CreatedBy.LastName}".Trim()
+
+                    },
+                    Instructions = recipe.Instructions
+                    .OrderBy(i => i.StepNumber)
+                    .Select(i => new InstructionDto
+                    {
+                        StepNumber = i.StepNumber,
+                        Instruction = i.ActualInstruction,
+                        EstimatedMinutes = i.EstimatedMinutes
+                    }).ToList(),
+
+                    Ingredients = recipe.RecipeIngredients.Select(ri => new IngredientDto
+                    {
+                        IngredientId = ri.IngredientId,
+                        IngredientName = ri.Ingredient!.Name,
+                        Quantity = ri.Quantity,
+                        Unit = ri.Unit!.Name,
+                        Notes = ri.Notes
+                    }).ToList(),
+                    Nutrition = new NutritionDto
+                    {
+                        Calories = nutrition.PerServing.Calories,
+                        Proteins = nutrition.PerServing.Proteins,
+                        Carbohydrates = nutrition.PerServing.Carbohydrates,
+                        Fats = nutrition.PerServing.Fats,
+                        Fibers = nutrition.PerServing.Fibers,
+                        Sodium = nutrition.PerServing.Sodium,
+                    }
+
+                };
+                response.Add(recipeDto);
+            }
+
             return Ok(response);
         }
 
@@ -96,54 +129,55 @@ namespace AuthService.Controllers
 
             var nutritionResult = _nutritionCalculator.CalculateRecipeNutrition(recipe.RecipeIngredients, recipe.Servings);
 
-            var response = new
+            var response = new RecipeDetailsResponseDto
             {
-                id = recipe.Id,
-                name = recipe.Name,
-                description = recipe.Description,
-                prepTimeMinutes = recipe.PrepTimeMinutes,
-                cookTimeMinutes = recipe.CookTimeMinutes,
-                servings = recipe.Servings,
-                imageUrl = recipe.ImageUrl,
-                videoUrl = recipe.VideoUrl,
-                regionOfOrigin = recipe.RegionOfOrigin,
-                category = new
-                {
-                    id = recipe.Category!.Id,
-                    name = recipe.Category.Name
-                },
-                createdBy = new
-                {
-                    id = recipe.CreatedBy!.Id,
-                    name = recipe.CreatedBy.FirstName,
-                    email = recipe.CreatedBy.Email
-                },
-                createdAt = recipe.CreatedAt,
-                instructions = recipe.Instructions.OrderBy(i => i.StepNumber).Select(i => new
-                {
-                    stepNumber = i.StepNumber,
-                    instruction = i.ActualInstruction,
-                    estimateMinutes = i.EstimatedMinutes
-                }),
-                ingredients = recipe.RecipeIngredients.Select(ri => new
-                {
-                    ingredientId = ri.IngredientId,
-                    ingredientName = ri.Ingredient!.Name,
-                    quantity = ri.Quantity,
-                    unit = ri.Unit!.Name,
-                    notes = ri.Notes
-                }),
-                nutrition = new
-                {
-                    calories = nutritionResult.PerServing.Calories,
-                    proteins = nutritionResult.PerServing.Proteins,
-                    carbohydrates = nutritionResult.PerServing.Carbohydrates,
-                    fats = nutritionResult.PerServing.Fats,
-                    fibers = nutritionResult.PerServing?.Fibers,
-                    sodium = nutritionResult.PerServing?.Sodium
-                }
-                
+                Id = recipe.Id,
+                Name = recipe.Name,
+                Description = recipe.Description,
+                PrepTimeMinutes = recipe.PrepTimeMinutes,
+                CookTimeMinutes = recipe.CookTimeMinutes,
+                Servings = recipe.Servings,
+                ImageUrl = recipe.ImageUrl,
+                VideoUrl = recipe.VideoUrl,
+                RegionOrOrigin = recipe.RegionOfOrigin,
 
+                Category = new CategoryDto
+                {
+                    Id = recipe.Category!.Id,
+                    Name = recipe.Category.Name
+                },
+                CreatedBy = new UserDto
+                {
+                    
+                    Name = recipe.CreatedBy!.FirstName,
+                    Email = recipe.CreatedBy.Email ?? string.Empty,
+                    FullName = $"{recipe.CreatedBy.FirstName} {recipe.CreatedBy.LastName}".Trim()
+                },
+                CreatedAt = recipe.CreatedAt,
+                Instructions = recipe.Instructions.OrderBy(i => i.StepNumber).Select(i => new InstructionDto
+                {
+                    StepNumber = i.StepNumber,
+                    Instruction = i.ActualInstruction,
+                    EstimatedMinutes = i.EstimatedMinutes
+                }).ToList(),
+                Ingredients = recipe.RecipeIngredients.Select(ri => new IngredientDto
+                {
+                    IngredientId = ri.IngredientId,
+                    IngredientName = ri.Ingredient!.Name,
+                    Quantity = ri.Quantity,
+                    Unit = ri.Unit!.Name,
+                    Notes = ri.Notes
+                }).ToList(),
+                Nutrition = new NutritionDto
+                {
+                    Calories = nutritionResult.PerServing.Calories,
+                    Proteins = nutritionResult.PerServing.Proteins,
+                    Carbohydrates = nutritionResult.PerServing.Carbohydrates,
+                    Fats = nutritionResult.PerServing.Fats,
+                    Fibers = nutritionResult.PerServing?.Fibers,
+                    Sodium = nutritionResult.PerServing?.Sodium
+                }
+            
             };
             return Ok(response);
         }
@@ -271,45 +305,57 @@ namespace AuthService.Controllers
 
                 //shaping the created recipe with minimal include
 
-                var response = new
+                var nutrition = _nutritionCalculator.CalculateRecipeNutrition(createdRecipe!.RecipeIngredients, createdRecipe.Servings);
+
+                var response = new CreateRecipeResponseDto
                 {
-                    id = createdRecipe!.Id,
-                    name = createdRecipe.Name,
-                    description = createdRecipe.Description,
-                    category = new
+                    Id = createdRecipe!.Id,
+                    Name = createdRecipe.Name,
+                    Description = createdRecipe.Description,
+                    Category = new CategoryDto
                     {
-                        id = createdRecipe.Category!.Id,
-                        name = createdRecipe.Category.Name,
+                        Id = createdRecipe.Category!.Id,
+                        Name = createdRecipe.Category.Name,
+                        Description = createdRecipe.Category.Description,
                     },
-                    prepTimeMinutes = createdRecipe.PrepTimeMinutes,
-                    cookTimeMinutes = createdRecipe.CookTimeMinutes,
-                    servings = createdRecipe.Servings,
-                    imageUrl = createdRecipe.ImageUrl,
-                    videoUrl = createdRecipe.VideoUrl,
-                    regionOfOrigin = createdRecipe.RegionOfOrigin,
-                    createdBy = new
+                    PrepTimeMinutes = createdRecipe.PrepTimeMinutes,
+                    CookTimeMinutes = createdRecipe.CookTimeMinutes,
+                    Servings = createdRecipe.Servings,
+                    ImageUrl = createdRecipe.ImageUrl,
+                    VideoUrl = createdRecipe.VideoUrl,
+                    RegionOrOrigin = createdRecipe.RegionOfOrigin,
+                    CreatedBy = new UserDto
                     {
-                        id = createdRecipe.CreatedBy!.Id,
-                        fullName = $"{createdRecipe.CreatedBy.FirstName} {createdRecipe.CreatedBy.LastName}".Trim(),
-                        email = createdRecipe.CreatedBy.Email
+                        Name = createdRecipe.CreatedBy!.FirstName,
+                        FullName = $"{createdRecipe.CreatedBy.FirstName} {createdRecipe.CreatedBy.LastName}".Trim(),
+                        Email = createdRecipe.CreatedBy.Email ?? string.Empty
                     },
-                    createdAt = createdRecipe.CreatedAt,
-                    instructions = createdRecipe.Instructions.OrderBy(i => i.StepNumber).Select(i => new
+                    CreatedAt = createdRecipe.CreatedAt,
+                    Instructions = createdRecipe.Instructions.OrderBy(i => i.StepNumber).Select(i => new InstructionDto
                     {
-                        stepNumber = i.StepNumber,
-                        instruction = i.ActualInstruction,
-                        estimatedMinutes = i.EstimatedMinutes
-                    }),
-                    ingredients = createdRecipe.RecipeIngredients.Select(ri => new
+                        StepNumber = i.StepNumber,
+                        Instruction = i.ActualInstruction,
+                        EstimatedMinutes = i.EstimatedMinutes
+                    }).ToList(),
+                    Ingredients = createdRecipe.RecipeIngredients.Select(ri => new IngredientDto
                     {
-                        ingredienId = ri.IngredientId,
-                        ingredientName = ri.Ingredient!.Name,
-                        quantity = ri.Quantity,
-                        unit = ri.Unit!.Name,
-                        notes = ri.Notes
+                        IngredientId = ri.IngredientId,
+                        IngredientName = ri.Ingredient!.Name,
+                        Quantity = ri.Quantity,
+                        Unit = ri.Unit!.Name,
+                        Notes = ri.Notes
 
-                    })
+                    }).ToList(),
 
+                    Nutrition = new NutritionDto
+                    {
+                        Calories = nutrition.PerServing.Calories,
+                        Proteins = nutrition.PerServing.Proteins,
+                        Carbohydrates = nutrition.PerServing.Carbohydrates,
+                        Fats = nutrition.PerServing.Fats,
+                        Fibers = nutrition.PerServing.Fibers,
+                        Sodium = nutrition.PerServing.Sodium
+                    }
 
                 };
 

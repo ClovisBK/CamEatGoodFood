@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\AppDtos\RecipeDto\NewFolder\" />
+    <Folder Include="DTOs\AppDtos\Recipe\NewFolder\" />
     <Folder Include="Helpers\" />
     <Folder Include="Configurations\" />
     <Folder Include="Extensions\" />
