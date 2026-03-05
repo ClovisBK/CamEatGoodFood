@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260304111722_AddedIngredientDatawithNutrition")]
-    partial class AddedIngredientDatawithNutrition
+    [Migration("20260304210107_GeneralizedMigration")]
+    partial class GeneralizedMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1777,6 +1777,61 @@ namespace AuthService.Migrations
                         });
                 });
 
+            modelBuilder.Entity("AuthService.Models.AppModels.Recipe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CookTimeMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PrepTimeMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RegionOfOrigin")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Servings")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("VideoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Recipes");
+                });
+
             modelBuilder.Entity("AuthService.Models.AppModels.RecipeCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -1827,6 +1882,71 @@ namespace AuthService.Migrations
                             Description = "Drinks and smoothies",
                             Name = "Beverages"
                         });
+                });
+
+            modelBuilder.Entity("AuthService.Models.AppModels.RecipeIngredient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IngredientId");
+
+                    b.HasIndex("RecipeId");
+
+                    b.HasIndex("UnitId");
+
+                    b.ToTable("RecipeIngredients");
+                });
+
+            modelBuilder.Entity("AuthService.Models.AppModels.RecipeInstruction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActualInstruction")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EstimatedMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsOptional")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StepNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("RecipeInstructions");
                 });
 
             modelBuilder.Entity("AuthService.Models.ApplicationUser", b =>
@@ -1928,23 +2048,23 @@ namespace AuthService.Migrations
                             Id = "100",
                             AccessFailedCount = 0,
                             Bio = "I am a certified chef that works with tasty foods",
-                            ConcurrencyStamp = "443247f6-68a1-49ff-86a5-e4573069f5cb",
+                            ConcurrencyStamp = "fc89f5e4-fb61-4bcf-abfa-bc6548b275da",
                             DateOfBirth = new DateTime(1992, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "wakebeh14@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Wa Kebeh",
                             Gender = "Male",
-                            JoinedDate = new DateTime(2026, 3, 4, 11, 17, 20, 812, DateTimeKind.Utc).AddTicks(3633),
+                            JoinedDate = new DateTime(2026, 3, 4, 21, 1, 6, 93, DateTimeKind.Utc).AddTicks(3625),
                             LastName = "Mbong",
                             Location = "Yaounde",
                             LockoutEnabled = false,
                             NormalizedEmail = "WAKEBEH14@GMAIL.COM",
                             NormalizedUserName = "ADMIN@SYSTEM.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHiuSiD0vHO7RnuI2fFq6qpqnQiQcmyCSI+Y2SS/WN71R97dm7iK6OE2YhxVBGE8lw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAWa0Ik5LAzKW40falUJRl1fd4USeG1n1s/VBjsLfmtuIKUIaOoA/xkiSL0vejbg6Q==",
                             Phone = "676455676",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "myphoto.jpg",
-                            SecurityStamp = "ba6c2a6d-3f54-4ee9-8e1b-a24d9e397f19",
+                            SecurityStamp = "9c25a0a6-214d-4015-8285-e1e724e8e21a",
                             TwoFactorEnabled = false,
                             UserName = "admin@system.com"
                         });
@@ -2138,6 +2258,63 @@ namespace AuthService.Migrations
                     b.Navigation("IngredientUnit");
                 });
 
+            modelBuilder.Entity("AuthService.Models.AppModels.Recipe", b =>
+                {
+                    b.HasOne("AuthService.Models.AppModels.RecipeCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AuthService.Models.ApplicationUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("AuthService.Models.AppModels.RecipeIngredient", b =>
+                {
+                    b.HasOne("AuthService.Models.AppModels.Ingredient", "Ingredient")
+                        .WithMany()
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AuthService.Models.AppModels.Recipe", "Recipe")
+                        .WithMany("RecipeIngredients")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AuthService.Models.AppModels.IngredientUnit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("Recipe");
+
+                    b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("AuthService.Models.AppModels.RecipeInstruction", b =>
+                {
+                    b.HasOne("AuthService.Models.AppModels.Recipe", "Recipe")
+                        .WithMany("Instructions")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+                });
+
             modelBuilder.Entity("AuthService.Models.RefreshToken", b =>
                 {
                     b.HasOne("AuthService.Models.ApplicationUser", "User")
@@ -2196,6 +2373,13 @@ namespace AuthService.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AuthService.Models.AppModels.Recipe", b =>
+                {
+                    b.Navigation("Instructions");
+
+                    b.Navigation("RecipeIngredients");
                 });
 
             modelBuilder.Entity("AuthService.Models.ApplicationUser", b =>

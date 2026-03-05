@@ -13,6 +13,7 @@ namespace AuthService.Models.AppModels
         [Column(TypeName ="decimal(10, 2)")]
         public decimal Quantity { get; set; }
 
+        [System.Text.Json.Serialization.JsonIgnore]
         [ForeignKey("RecipeId")]
         public Recipe? Recipe { get; set; }
 

@@ -8,6 +8,8 @@ namespace AuthService.Models.AppModels
 
         public int RecipeId { get; set; }
 
+
+        [System.Text.Json.Serialization.JsonIgnore]
         [ForeignKey("RecipeId")]
         public Recipe? Recipe { get; set; }
         public int StepNumber { get; set; }
