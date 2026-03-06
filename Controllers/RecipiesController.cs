@@ -5,6 +5,7 @@ using AuthService.DTOs.AppDtos.Category;
 using AuthService.DTOs.AppDtos.Ingredient;
 using AuthService.DTOs.AppDtos.Instruction;
 using AuthService.DTOs.AppDtos.Nutrition;
+using AuthService.DTOs.AppDtos.Recipe;
 using AuthService.DTOs.AppDtos.RecipeDto;
 using AuthService.DTOs.AppDtos.User;
 using AuthService.Models.AppModels;
@@ -365,6 +366,89 @@ namespace AuthService.Controllers
             {
                 _logger.LogError(ex, "Failed to create recipe: {recipeName}", dto.Name);
                 return StatusCode(500, new { message = "An error occurred while creating the recipe" });
+            }
+
+        }
+        /// <summary>
+        /// Updating the recipe alongside ingredients and instructions
+        /// </summary>
+        /// <remarks>
+        /// **We are doing the following:**
+        /// *Retrieving the authenticated user
+        /// *Retrieving the recipe of interest by ID
+        /// *Verifying the authenticated user owns the recipe to be updated
+        /// *Verfying if the recipe of the searched Id exists
+        /// *Modifying all fields as needed by the author
+        /// </remarks>
+        /// <param name="id">The Id of the recipe in In question</param>
+        /// <param name="dto">The DTO for updating a recipe with the various fields</param>
+        /// <returns>A Message of success</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRecipe(int id, UpdateRecipeDto dto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("Not authorized here");
+
+            var recipe = await _context.Recipes
+                .Include(r => r.RecipeIngredients)
+                .Include(r => r.Instructions)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (recipe == null)
+                return NotFound(new { message = $"Recipe with ID {id} not found" });
+
+            if (recipe.UserId != userId)
+                return Forbid("You can only update your own recipes");
+
+            recipe.Name = dto.Name;
+            recipe.Description = dto.Description;
+            recipe.CategoryId = dto.CategoryId;
+            recipe.PrepTimeMinutes = dto.PrepTimeMinutes;
+            recipe.CookTimeMinutes = dto.CookTimeMinutes;
+            recipe.Servings = dto.Servings;
+            recipe.ImageUrl = dto.ImageUrl;
+            recipe.VideoUrl = dto.VideoUrl;
+            recipe.RegionOfOrigin = dto.RegionOfOrigin;
+            recipe.LastUpdatedAt = DateTime.UtcNow;
+
+            if(dto.RecipeIngredient != null)
+            {
+                _context.RecipeIngredients.RemoveRange(recipe.RecipeIngredients);
+
+                var newIngredients = dto.RecipeIngredient.Select(item => new RecipeIngredient
+                {
+                    RecipeId = recipe.Id,
+                    IngredientId = item.IngredientId,
+                    Quantity = item.Quantity,
+                    UnitId = item.UnitId,
+                    Notes = item.Notes
+                }).ToList();
+
+                await _context.RecipeIngredients.AddRangeAsync(newIngredients);
+            }
+            if(dto.RecipeInstruction  != null)
+            {
+                _context.RecipeInstructions.RemoveRange(recipe.Instructions);
+
+                var newInstructions = dto.RecipeInstruction.Select(item => new RecipeInstruction
+                {
+                    RecipeId = recipe.Id,
+                    StepNumber = item.StepNumber,
+                    ActualInstruction = item.ActualInstruction,
+                    EstimatedMinutes = item.EstimatedMinutes
+                }).ToList();
+                await _context.RecipeInstructions.AddRangeAsync(newInstructions);
+            }
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Updated successfully" });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update recipe ID: {RecipeId}", id);
+                return StatusCode(500, new { message = "An error occurred while updating the recipe" });
             }
 
         }

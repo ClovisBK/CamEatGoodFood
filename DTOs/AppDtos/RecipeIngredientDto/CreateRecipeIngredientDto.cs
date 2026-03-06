@@ -2,7 +2,7 @@
 
 namespace AuthService.DTOs.AppDtos.RecipeIngredientDto
 {
-    public class CreateRecipeIngredient
+    public class CreateRecipeIngredientDto
     {
         public int IngredientId { get; set; }
         public int UnitId { get; set; }
