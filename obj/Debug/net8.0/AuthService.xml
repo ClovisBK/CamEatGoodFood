@@ -83,6 +83,18 @@
         <member name="M:AuthService.Migrations.addRecipeLikes.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:AuthService.Migrations.AddRecipeRating">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.AddRecipeRating.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.AddRecipeRating.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.AddRecipeRating.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="M:AuthService.Services.Nutrition.INutritionCalculator.CalculateRecipeNutrition(System.Collections.Generic.ICollection{AuthService.Models.AppModels.RecipeIngredient},System.Int32)">
             <summary>
             Calculates Nutritional information for a recipe

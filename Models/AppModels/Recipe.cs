@@ -17,6 +17,8 @@ namespace AuthService.Models.AppModels
         public string? VideoUrl { get; set; }
         public string? RegionOfOrigin { get; set; }
         public int LikeCount { get; set; }
+        public double AverageRating { get; set; }
+        public int RatingCount { get; set; }
 
         [ForeignKey("UserId")]
         public ApplicationUser? CreatedBy { get; set; }
@@ -31,6 +33,7 @@ namespace AuthService.Models.AppModels
         public ICollection<RecipeInstruction> Instructions { get; set; } = new List<RecipeInstruction>();
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
         public ICollection<RecipeLike> RecipeLikes { get; set; } = new List<RecipeLike>();
+        public ICollection<RecipeRating> RecipeRatings { get; set; } = new List<RecipeRating>();
 
     }
 }

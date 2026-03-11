@@ -16,5 +16,7 @@ namespace AuthService.DTOs.AppDtos.RecipeDto
         public string CreatedBy { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public int LikeCount { get; set; }
+        public int AverageRating { get; set; }
+        public int RatingCount { get; set; }
     }
 }

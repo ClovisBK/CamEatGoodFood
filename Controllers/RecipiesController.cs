@@ -109,6 +109,10 @@ namespace AuthService.Controllers
             {
                 userLiked = await _context.RecipeLikes.AnyAsync(rl => rl.RecipeId == id && rl.UserId == userId);
             }
+
+            var userRatingEntity = await _context.RecipeRatings
+                .FirstOrDefaultAsync(rr => rr.RecipeId == id && rr.UserId == userId);
+            var userRating = userRatingEntity!.Score;
             
 
             var nutritionResult = _nutritionCalculator.CalculateRecipeNutrition(recipe.RecipeIngredients, recipe.Servings);
@@ -126,6 +130,9 @@ namespace AuthService.Controllers
                 RegionOrOrigin = recipe.RegionOfOrigin,
                 LikeCount = recipe.LikeCount,
                 UserLiked = userLiked,
+                AverageRating = recipe.AverageRating,
+                RatingCount = recipe.RatingCount,
+                UserRating = userRating,
                 Category = new CategoryDto
                 {
                     Id = recipe.Category!.Id,

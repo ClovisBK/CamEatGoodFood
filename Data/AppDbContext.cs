@@ -18,6 +18,7 @@ namespace AuthService.Data
         public DbSet<RecipeInstruction> RecipeInstructions { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeLike> RecipeLikes { get; set; }
+        public DbSet<RecipeRating> RecipeRatings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -46,6 +47,28 @@ namespace AuthService.Data
                 .WithMany()
                 .HasForeignKey(rl => rl.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            //configuration of recipe ratings
+
+            builder.Entity<RecipeRating>()
+                .HasIndex(rr => new { rr.RecipeId, rr.UserId })
+                .IsUnique();
+
+            builder.Entity<RecipeRating>()
+                .HasOne(rr => rr.Recipe)
+                .WithMany(rr => rr.RecipeRatings)
+                .HasForeignKey(rr => rr.RecipeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<RecipeRating>()
+                .HasOne(rr => rr.User)
+                .WithMany()
+                .HasForeignKey(rr => rr.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Recipe>()
+                .Property(r => r.AverageRating)
+                .HasPrecision(3, 2);
 
             builder.Entity<IdentityRole>().HasData(adminRole);
 
