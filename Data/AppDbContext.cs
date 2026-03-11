@@ -17,6 +17,7 @@ namespace AuthService.Data
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public DbSet<RecipeInstruction> RecipeInstructions { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<RecipeLike> RecipeLikes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -28,6 +29,23 @@ namespace AuthService.Data
                 Name = "Admin",
                 NormalizedName = "ADMIN"
             };
+
+            //configuration of recipelikes
+            builder.Entity<RecipeLike>()
+                .HasIndex(rl => new { rl.RecipeId, rl.UserId })
+                .IsUnique();
+
+            builder.Entity<RecipeLike>()
+                .HasOne(rl => rl.Recipe)
+                .WithMany(r => r.RecipeLikes)
+                .HasForeignKey(r => r.RecipeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<RecipeLike>()
+                .HasOne(rl => rl.User)
+                .WithMany()
+                .HasForeignKey(rl => rl.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<IdentityRole>().HasData(adminRole);
 

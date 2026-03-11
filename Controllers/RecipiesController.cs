@@ -34,87 +34,63 @@ namespace AuthService.Controllers
         }
 
         [HttpGet("Get-recipes")]
-        public async Task<IActionResult> GetRecipes()
+        public async Task<IActionResult> GetRecipes([FromQuery] int limit = 10, [FromQuery] int? cursor = null)
         {
-            var recipes = await _context.Recipes
+            
+            if (limit < 1) limit = 10;
+            if(limit > 50) limit = 50;
+
+            var query = _context.Recipes
                 .Include(r => r.Category)
                 .Include(r => r.CreatedBy)
-                .Include(r => r.RecipeIngredients)
-                    .ThenInclude(ri => ri.Ingredient)
-                .Include(r => r.RecipeIngredients)
-                    .ThenInclude(ri => ri.Unit)
-                .Include(r => r.Instructions)
-                .ToListAsync();
+                .OrderByDescending(r => r.Id)
+                .AsQueryable();
 
-            var response = new List<RecipeListResponseDto>();
-
-            foreach(var recipe in recipes)
+            //applying cursor. Get recipes with ID less than the cursor
+            if (cursor.HasValue)
             {
-                var nutrition = _nutritionCalculator.CalculateRecipeNutrition(recipe.RecipeIngredients, recipe.Servings);
-
-                var recipeDto = new RecipeListResponseDto
+                query = query.Where(r => r.Id < cursor.Value);
+            }
+            var recipes = await query
+                .Take(limit + 1)
+                .Select(recipe => new RecipeListResponseDto
                 {
                     Id = recipe.Id,
                     Name = recipe.Name,
-                    Description = recipe.Description,
-                    PrepTimeMinutes = recipe.PrepTimeMinutes,
-                    CookTimeMinutes = recipe.CookTimeMinutes,
-                    Servings = recipe.Servings,
-                    ImageUrl = recipe.ImageUrl,
-                    VideoUrl = recipe.VideoUrl,
                     RegionOrOrigin = recipe.RegionOfOrigin,
                     CreatedAt = recipe.CreatedAt,
-                    Category = new CategoryDto
-                    {
-                        Id = recipe.Category!.Id,
-                        Name = recipe.Category!.Name,
-                        Description = recipe.Description
-                    },
-                    CreatedBy = new UserDto
-                    {
-                       
-                        Name = recipe.CreatedBy!.FirstName,
-                        Email = recipe.CreatedBy.Email ?? string.Empty,
-                        FullName = $"{recipe.CreatedBy.FirstName} {recipe.CreatedBy.LastName}".Trim()
+                    ImageUrl = recipe.ImageUrl,
+                    CategoryName = recipe.Category!.Name,
+                    CreatedBy = recipe.CreatedBy!.FirstName,
+                    LikeCount = recipe.LikeCount
+                })
+                .ToListAsync();
 
-                    },
-                    Instructions = recipe.Instructions
-                    .OrderBy(i => i.StepNumber)
-                    .Select(i => new InstructionDto
-                    {
-                        StepNumber = i.StepNumber,
-                        Instruction = i.ActualInstruction,
-                        EstimatedMinutes = i.EstimatedMinutes
-                    }).ToList(),
-
-                    Ingredients = recipe.RecipeIngredients.Select(ri => new IngredientDto
-                    {
-                        IngredientId = ri.IngredientId,
-                        IngredientName = ri.Ingredient!.Name,
-                        Quantity = ri.Quantity,
-                        Unit = ri.Unit!.Name,
-                        Notes = ri.Notes
-                    }).ToList(),
-                    Nutrition = new NutritionDto
-                    {
-                        Calories = nutrition.PerServing.Calories,
-                        Proteins = nutrition.PerServing.Proteins,
-                        Carbohydrates = nutrition.PerServing.Carbohydrates,
-                        Fats = nutrition.PerServing.Fats,
-                        Fibers = nutrition.PerServing.Fibers,
-                        Sodium = nutrition.PerServing.Sodium,
-                    }
-
-                };
-                response.Add(recipeDto);
+            bool hasMore = recipes.Count > limit;
+            if (hasMore)
+            {
+                recipes.RemoveAt(recipes.Count - 1);
             }
+            int? nexCursor = recipes.Any() ? recipes.Last().Id : (int?)null;
 
-            return Ok(response);
+            return Ok(new
+            {
+                recipes,
+                nexCursor,
+                hasMore,
+                count = recipes.Count
+            });
         }
 
+        /// <summary>
+        /// Retrieving a recipe by its ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>A recipe with its details</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRecipeById(int id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var recipe = await _context.Recipes
                 .Include(r => r.Category)
                 .Include(r => r.CreatedBy)
@@ -127,6 +103,13 @@ namespace AuthService.Controllers
 
             if (recipe == null)
                 return NotFound(new { message = $"Recipe with ID {id} not found" });
+
+            bool userLiked = false;
+            if(!string.IsNullOrEmpty(userId))
+            {
+                userLiked = await _context.RecipeLikes.AnyAsync(rl => rl.RecipeId == id && rl.UserId == userId);
+            }
+            
 
             var nutritionResult = _nutritionCalculator.CalculateRecipeNutrition(recipe.RecipeIngredients, recipe.Servings);
 
@@ -141,7 +124,8 @@ namespace AuthService.Controllers
                 ImageUrl = recipe.ImageUrl,
                 VideoUrl = recipe.VideoUrl,
                 RegionOrOrigin = recipe.RegionOfOrigin,
-
+                LikeCount = recipe.LikeCount,
+                UserLiked = userLiked,
                 Category = new CategoryDto
                 {
                     Id = recipe.Category!.Id,
@@ -183,6 +167,43 @@ namespace AuthService.Controllers
             return Ok(response);
         }
 
+        [HttpGet("Search-recipe")]
+        public  async Task<IActionResult> SearchRecipes(string term)
+        {
+            var searchTerm = term.Trim().ToLower();
+            var recipes = await _context.Recipes
+                .Include(r => r.Category)
+                .Include(r => r.CreatedBy)
+                .Include(r => r.RecipeIngredients)
+                .Where(r => r.Name.ToLower().Contains(searchTerm) ||
+                r.RecipeIngredients.Any(ri => ri.Ingredient != null &&
+                ri.Ingredient.Name.ToLower().Contains(searchTerm)))
+                .Select(r => new RecipeListResponseDto
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    CategoryName = r.Category!.Name,
+                    CreatedBy = r.CreatedBy!.FirstName,
+                    CreatedAt = r.CreatedAt,
+                    RegionOrOrigin = r.RegionOfOrigin
+                })
+                .ToListAsync();
+                    
+            return Ok(recipes);
+        }
+        /// <summary>
+        /// Creating recipe alongside the ingredients and instructions by a contributor
+        /// </summary>
+        /// <remarks>
+        /// **The following are the operations here:**
+        /// * Retrieving the authenticated user and verifying for authorization
+        /// * Validating the required input fields to ensure they are input
+        /// * Extrating the recipes and verifying availability before adding
+        /// * Adding instruction fields to the intructions section in the model
+        /// * Adding the recipe fields themselves accordingly
+        /// </remarks>
+        /// <param name="dto">A DTO for the creation of the recipe</param>
+        /// <returns>A recipe response body</returns>
         [HttpPost("Add-recipe")]
         [Authorize(Roles ="Contributor")]
         public async Task<IActionResult> AddRecipe(CreateRecipeDto dto)
@@ -374,16 +395,16 @@ namespace AuthService.Controllers
         /// </summary>
         /// <remarks>
         /// **We are doing the following:**
-        /// *Retrieving the authenticated user
-        /// *Retrieving the recipe of interest by ID
-        /// *Verifying the authenticated user owns the recipe to be updated
-        /// *Verfying if the recipe of the searched Id exists
-        /// *Modifying all fields as needed by the author
+        /// * Retrieving the authenticated user
+        /// * Retrieving the recipe of interest by ID
+        /// * Verifying the authenticated user owns the recipe to be updated
+        /// * Verfying if the recipe of the searched Id exists
+        /// * Modifying all fields as needed by the author
         /// </remarks>
         /// <param name="id">The Id of the recipe in In question</param>
         /// <param name="dto">The DTO for updating a recipe with the various fields</param>
         /// <returns>A Message of success</returns>
-        [HttpPut("{id}")]
+        [HttpPut("/update-recipe{id}")]
         public async Task<IActionResult> UpdateRecipe(int id, UpdateRecipeDto dto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

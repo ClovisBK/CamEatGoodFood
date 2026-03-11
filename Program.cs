@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using AuthService.Data;
 using AuthService.Models;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,9 +60,18 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
         Title = "Auth API",
-        Version = "v1"
+        Version = "v1",
+        Description = "API for recipe guidance and nutrient tracking",
+        Contact = new OpenApiContact
+        {
+            Name = "Support Team",
+            Email = "support@cameatwell.com"
+        }
     });
 
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
    
     // JWT Authentication in Swagger
    
@@ -91,7 +102,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 
-var app = builder.Build();
+
 
 //using (var scope = app.Services.CreateScope())
 //{
@@ -99,6 +110,21 @@ var app = builder.Build();
 //    await RoleSeeder.SeedAsync(roleManager);
 //}
 // Configure the HTTP request pipeline.
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("All",
+        builder =>
+        {
+            builder.WithOrigins("URL passes here")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+        });
+});
+
+var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

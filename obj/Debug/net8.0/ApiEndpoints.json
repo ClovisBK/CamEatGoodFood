@@ -142,6 +142,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "AuthService.Controllers.RecipeLikesController",
+    "Method": "GetLikeStatus",
+    "RelativePath": "api/recipes/{recipeId}/likes/status",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "recipeId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AuthService.Controllers.RecipeLikesController",
+    "Method": "ToggleLike",
+    "RelativePath": "api/recipes/{recipeId}/likes/toggle",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "recipeId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "AuthService.Controllers.RecipiesController",
     "Method": "GetRecipeById",
     "RelativePath": "api/Recipies/{id}",
@@ -180,7 +212,55 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "limit",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "cursor",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AuthService.Controllers.RecipiesController",
+    "Method": "SearchRecipes",
+    "RelativePath": "api/Recipies/Search-recipe",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "term",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AuthService.Controllers.RecipiesController",
+    "Method": "UpdateRecipe",
+    "RelativePath": "update-recipe{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "AuthService.DTOs.AppDtos.Recipe.UpdateRecipeDto",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   }
 ]

@@ -1,13 +1,20 @@
-﻿using AuthService.DTOs.AppDtos.Ingredient;
+﻿using AuthService.DTOs.AppDtos.Category;
+using AuthService.DTOs.AppDtos.Ingredient;
 using AuthService.DTOs.AppDtos.Instruction;
 using AuthService.DTOs.AppDtos.Nutrition;
+using AuthService.DTOs.AppDtos.User;
 
 namespace AuthService.DTOs.AppDtos.RecipeDto
 {
-    public class RecipeListResponseDto : RecipeResponseDto
+    public class RecipeListResponseDto 
     {
-        public List<InstructionDto> Instructions { get; set; } = new();
-        public List<IngredientDto> Ingredients { get; set; } = new();
-        public NutritionDto Nutrition { get; set; } = null!;
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
+        public string? RegionOrOrigin { get; set; }
+        public string CategoryName { get; set; } = string.Empty;
+        public string CreatedBy { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
+        public int LikeCount { get; set; }
     }
 }

@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AuthService</name>
+    </assembly>
+    <members>
+        <member name="T:AuthService.Controllers.AuthController">
+            <summary>
+            This is the authentication section for user manangement.
+            </summary>
+        </member>
+        <member name="T:AuthService.Controllers.IngredientsController">
+            <summary>
+            This controller concerns ingredient information and very important nutritional content
+            </summary>
+        </member>
+        <member name="M:AuthService.Controllers.RecipeLikesController.GetLikeStatus(System.Int32)">
+            <summary>
+            Get like status for current user and total count for likes of that recipe
+            </summary>
+            <param name="recipeId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AuthService.Controllers.RecipiesController.GetRecipeById(System.Int32)">
+            <summary>
+            Retrieving a recipe by its ID
+            </summary>
+            <param name="id"></param>
+            <returns>A recipe with its details</returns>
+        </member>
+        <member name="M:AuthService.Controllers.RecipiesController.AddRecipe(AuthService.DTOs.AppDtos.RecipeDto.CreateRecipeDto)">
+            <summary>
+            Creating recipe alongside the ingredients and instructions by a contributor
+            </summary>
+            <remarks>
+            **The following are the operations here:**
+            * Retrieving the authenticated user and verifying for authorization
+            * Validating the required input fields to ensure they are input
+            * Extrating the recipes and verifying availability before adding
+            * Adding instruction fields to the intructions section in the model
+            * Adding the recipe fields themselves accordingly
+            </remarks>
+            <param name="dto">A DTO for the creation of the recipe</param>
+            <returns>A recipe response body</returns>
+        </member>
+        <member name="M:AuthService.Controllers.RecipiesController.UpdateRecipe(System.Int32,AuthService.DTOs.AppDtos.Recipe.UpdateRecipeDto)">
+            <summary>
+            Updating the recipe alongside ingredients and instructions
+            </summary>
+            <remarks>
+            **We are doing the following:**
+            * Retrieving the authenticated user
+            * Retrieving the recipe of interest by ID
+            * Verifying the authenticated user owns the recipe to be updated
+            * Verfying if the recipe of the searched Id exists
+            * Modifying all fields as needed by the author
+            </remarks>
+            <param name="id">The Id of the recipe in In question</param>
+            <param name="dto">The DTO for updating a recipe with the various fields</param>
+            <returns>A Message of success</returns>
+        </member>
+        <member name="T:AuthService.Migrations.GeneralizedMigration">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.GeneralizedMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.GeneralizedMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.GeneralizedMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:AuthService.Migrations.addRecipeLikes">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.addRecipeLikes.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.addRecipeLikes.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.addRecipeLikes.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Services.Nutrition.INutritionCalculator.CalculateRecipeNutrition(System.Collections.Generic.ICollection{AuthService.Models.AppModels.RecipeIngredient},System.Int32)">
+            <summary>
+            Calculates Nutritional information for a recipe
+            </summary>
+            <param name="recipeIngredients">Collection of recipe ingredients with ingredient and unit loaded</param>
+            <param name="servings">Number of servings the recipe yields</param>
+            <returns>Complete nutrition results with total and per-serving values</returns>
+        </member>
+    </members>
+</doc>

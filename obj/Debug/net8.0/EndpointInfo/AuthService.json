@@ -2,6 +2,11 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Auth API",
+    "description": "API for recipe guidance and nutrient tracking",
+    "contact": {
+      "name": "Support Team",
+      "email": "support@cameatwell.com"
+    },
     "version": "v1"
   },
   "paths": {
@@ -249,26 +254,14 @@
         }
       }
     },
-    "/api/Recipies/Get-recipes": {
-      "get": {
+    "/api/recipes/{recipeId}/likes/toggle": {
+      "post": {
         "tags": [
-          "Recipies"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Recipies/{id}": {
-      "get": {
-        "tags": [
-          "Recipies"
+          "RecipeLikes"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "recipeId",
             "in": "path",
             "required": true,
             "schema": {
@@ -284,12 +277,117 @@
         }
       }
     },
+    "/api/recipes/{recipeId}/likes/status": {
+      "get": {
+        "tags": [
+          "RecipeLikes"
+        ],
+        "summary": "Get like status for current user and total count for likes of that recipe",
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Recipies/Get-recipes": {
+      "get": {
+        "tags": [
+          "Recipies"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Recipies/{id}": {
+      "get": {
+        "tags": [
+          "Recipies"
+        ],
+        "summary": "Retrieving a recipe by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Recipies/Search-recipe": {
+      "get": {
+        "tags": [
+          "Recipies"
+        ],
+        "parameters": [
+          {
+            "name": "term",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Recipies/Add-recipe": {
       "post": {
         "tags": [
           "Recipies"
         ],
+        "summary": "Creating recipe alongside the ingredients and instructions by a contributor",
+        "description": "**The following are the operations here:**\r\n* Retrieving the authenticated user and verifying for authorization\r\n* Validating the required input fields to ensure they are input\r\n* Extrating the recipes and verifying availability before adding\r\n* Adding instruction fields to the intructions section in the model\r\n* Adding the recipe fields themselves accordingly",
         "requestBody": {
+          "description": "A DTO for the creation of the recipe",
           "content": {
             "application/json": {
               "schema": {
@@ -304,6 +402,52 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateRecipeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/update-recipe{id}": {
+      "put": {
+        "tags": [
+          "Recipies"
+        ],
+        "summary": "Updating the recipe alongside ingredients and instructions",
+        "description": "**We are doing the following:**\r\n* Retrieving the authenticated user\r\n* Retrieving the recipe of interest by ID\r\n* Verifying the authenticated user owns the recipe to be updated\r\n* Verfying if the recipe of the searched Id exists\r\n* Modifying all fields as needed by the author",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id of the recipe in In question",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The DTO for updating a recipe with the various fields",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRecipeDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRecipeDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRecipeDto"
               }
             }
           }
@@ -375,7 +519,7 @@
           "recipeIngredient": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CreateRecipeIngredient"
+              "$ref": "#/components/schemas/CreateRecipeIngredientDto"
             },
             "nullable": true
           },
@@ -389,7 +533,7 @@
         },
         "additionalProperties": false
       },
-      "CreateRecipeIngredient": {
+      "CreateRecipeIngredientDto": {
         "type": "object",
         "properties": {
           "ingredientId": {
@@ -543,6 +687,63 @@
           "confirmPassword": {
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateRecipeDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prepTimeMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cookTimeMinutes": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "servings": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "videoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "regionOfOrigin": {
+            "type": "string",
+            "nullable": true
+          },
+          "recipeIngredient": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateRecipeIngredientDto"
+            },
+            "nullable": true
+          },
+          "recipeInstruction": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateRecipeInstructionDto"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
