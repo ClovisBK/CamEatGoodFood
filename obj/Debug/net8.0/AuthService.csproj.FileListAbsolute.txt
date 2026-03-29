@@ -161,3 +161,6 @@ C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\bin
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\bin\Debug\net8.0\AuthService.xml
 C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\obj\Debug\net8.0\AuthService.xml
+C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\bin\Debug\net8.0\Azure.Storage.Blobs.dll
+C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\bin\Debug\net8.0\Azure.Storage.Common.dll
+C:\Users\Kebeh Clovis Bin\OneDrive\Desktop\ApiProject\CamEatWell\AuthService\bin\Debug\net8.0\System.IO.Hashing.dll

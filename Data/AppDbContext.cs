@@ -18,6 +18,8 @@ namespace AuthService.Data
         public DbSet<RecipeInstruction> RecipeInstructions { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeLike> RecipeLikes { get; set; }
+        public DbSet<RecipeRating> RecipeRatings { get; set; }
+        public DbSet<RecipeComment> RecipeComments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -46,6 +48,53 @@ namespace AuthService.Data
                 .WithMany()
                 .HasForeignKey(rl => rl.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            //configuration of recipe ratings
+
+            builder.Entity<RecipeRating>()
+                .HasIndex(rr => new { rr.RecipeId, rr.UserId })
+                .IsUnique();
+
+            builder.Entity<RecipeRating>()
+                .HasOne(rr => rr.Recipe)
+                .WithMany(rr => rr.RecipeRatings)
+                .HasForeignKey(rr => rr.RecipeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<RecipeRating>()
+                .HasOne(rr => rr.User)
+                .WithMany()
+                .HasForeignKey(rr => rr.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Recipe>()
+                .Property(r => r.AverageRating)
+                .HasPrecision(3, 2);
+
+
+
+            //configuration of Recipe comments
+            builder.Entity<RecipeComment>()
+                .HasOne(rc => rc.ParentComment)
+                .WithMany(rc => rc.Replies)
+                .HasForeignKey(rc => rc.ParentCommentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<RecipeComment>()
+                .HasOne(rc => rc.Recipe)
+                .WithMany(r => r.Comments)
+                .HasForeignKey(rc => rc.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<RecipeComment>()
+                .HasOne(rc => rc.User)
+                .WithMany()
+                .HasForeignKey(rc => rc.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<RecipeComment>()
+                .HasIndex(rc => new { rc.RecipeId, rc.ParentCommentId, rc.CreatedAt });
+
 
             builder.Entity<IdentityRole>().HasData(adminRole);
 

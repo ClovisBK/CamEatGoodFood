@@ -17,19 +17,81 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
+                "required": [
+                  "Email",
+                  "FirstName",
+                  "LastName",
+                  "Password"
+                ],
+                "type": "object",
+                "properties": {
+                  "FirstName": {
+                    "type": "string"
+                  },
+                  "LastName": {
+                    "type": "string"
+                  },
+                  "Email": {
+                    "type": "string"
+                  },
+                  "Password": {
+                    "type": "string"
+                  },
+                  "Bio": {
+                    "type": "string"
+                  },
+                  "DateOfBirth": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "Gender": {
+                    "type": "string"
+                  },
+                  "Location": {
+                    "type": "string"
+                  },
+                  "Phone": {
+                    "type": "string"
+                  },
+                  "ProfilePictureFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "FirstName": {
+                  "style": "form"
+                },
+                "LastName": {
+                  "style": "form"
+                },
+                "Email": {
+                  "style": "form"
+                },
+                "Password": {
+                  "style": "form"
+                },
+                "Bio": {
+                  "style": "form"
+                },
+                "DateOfBirth": {
+                  "style": "form"
+                },
+                "Gender": {
+                  "style": "form"
+                },
+                "Location": {
+                  "style": "form"
+                },
+                "Phone": {
+                  "style": "form"
+                },
+                "ProfilePictureFile": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -218,6 +280,154 @@
         }
       }
     },
+    "/api/recipes/{recipeId}/comments": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/recipes/{recipeId}/comments/{commentId}": {
+      "put": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Editing a comment by the comment writer",
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "description": "The recipe to which the comment belongs",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "The comment that is being edited",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The update block with the necessary fields for updating the comment",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCommentDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCommentDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Ingredients/Get-all-ingredients": {
       "get": {
         "tags": [
@@ -234,6 +444,104 @@
       "get": {
         "tags": [
           "IngredientUnits"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/recipes/{recipeId}/ratings": {
+      "post": {
+        "tags": [
+          "Ratings"
+        ],
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "score",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Ratings"
+        ],
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/recipes/{recipeId}/ratings/status": {
+      "get": {
+        "tags": [
+          "Ratings"
+        ],
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/recipes/{recipeId}/ratings/distribution": {
+      "get": {
+        "tags": [
+          "Ratings"
+        ],
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -302,10 +610,10 @@
         }
       }
     },
-    "/api/Recipies/Get-recipes": {
+    "/api/Recipes/Get-recipes": {
       "get": {
         "tags": [
-          "Recipies"
+          "Recipes"
         ],
         "parameters": [
           {
@@ -324,6 +632,14 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -333,10 +649,22 @@
         }
       }
     },
-    "/api/Recipies/{id}": {
+    "/api/Recipes/latest-recipes": {
       "get": {
         "tags": [
-          "Recipies"
+          "Recipes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Recipes/{id}": {
+      "get": {
+        "tags": [
+          "Recipes"
         ],
         "summary": "Retrieving a recipe by its ID",
         "parameters": [
@@ -358,10 +686,10 @@
         }
       }
     },
-    "/api/Recipies/Search-recipe": {
+    "/api/Recipes/Search-recipe": {
       "get": {
         "tags": [
-          "Recipies"
+          "Recipes"
         ],
         "parameters": [
           {
@@ -379,29 +707,100 @@
         }
       }
     },
-    "/api/Recipies/Add-recipe": {
+    "/api/Recipes/Add-recipe": {
       "post": {
         "tags": [
-          "Recipies"
+          "Recipes"
         ],
         "summary": "Creating recipe alongside the ingredients and instructions by a contributor",
         "description": "**The following are the operations here:**\r\n* Retrieving the authenticated user and verifying for authorization\r\n* Validating the required input fields to ensure they are input\r\n* Extrating the recipes and verifying availability before adding\r\n* Adding instruction fields to the intructions section in the model\r\n* Adding the recipe fields themselves accordingly",
         "requestBody": {
-          "description": "A DTO for the creation of the recipe",
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateRecipeDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRecipeDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRecipeDto"
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "CategoryId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PrepTimeMinutes": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "CookTimeMinutes": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Servings": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "ImageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "VideoFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "RegionOfOrigin": {
+                    "type": "string"
+                  },
+                  "RecipeIngredient": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CreateRecipeIngredientDto"
+                    }
+                  },
+                  "RecipeInstruction": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CreateRecipeInstructionDto"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "CategoryId": {
+                  "style": "form"
+                },
+                "PrepTimeMinutes": {
+                  "style": "form"
+                },
+                "CookTimeMinutes": {
+                  "style": "form"
+                },
+                "Servings": {
+                  "style": "form"
+                },
+                "ImageFile": {
+                  "style": "form"
+                },
+                "VideoFile": {
+                  "style": "form"
+                },
+                "RegionOfOrigin": {
+                  "style": "form"
+                },
+                "RecipeIngredient": {
+                  "style": "form"
+                },
+                "RecipeInstruction": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -416,7 +815,7 @@
     "/update-recipe{id}": {
       "put": {
         "tags": [
-          "Recipies"
+          "Recipes"
         ],
         "summary": "Updating the recipe alongside ingredients and instructions",
         "description": "**We are doing the following:**\r\n* Retrieving the authenticated user\r\n* Retrieving the recipe of interest by ID\r\n* Verifying the authenticated user owns the recipe to be updated\r\n* Verfying if the recipe of the searched Id exists\r\n* Modifying all fields as needed by the author",
@@ -433,25 +832,119 @@
           }
         ],
         "requestBody": {
-          "description": "The DTO for updating a recipe with the various fields",
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateRecipeDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRecipeDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRecipeDto"
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "CategoryId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PrepTimeMinutes": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "CookTimeMinutes": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Servings": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "ImageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "VideoFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "RegionOfOrigin": {
+                    "type": "string"
+                  },
+                  "RecipeIngredient": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CreateRecipeIngredientDto"
+                    }
+                  },
+                  "RecipeInstruction": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CreateRecipeInstructionDto"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "CategoryId": {
+                  "style": "form"
+                },
+                "PrepTimeMinutes": {
+                  "style": "form"
+                },
+                "CookTimeMinutes": {
+                  "style": "form"
+                },
+                "Servings": {
+                  "style": "form"
+                },
+                "ImageFile": {
+                  "style": "form"
+                },
+                "VideoFile": {
+                  "style": "form"
+                },
+                "RegionOfOrigin": {
+                  "style": "form"
+                },
+                "RecipeIngredient": {
+                  "style": "form"
+                },
+                "RecipeInstruction": {
+                  "style": "form"
+                }
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/delete-recipe/{id}": {
+      "delete": {
+        "tags": [
+          "Recipes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -476,58 +969,20 @@
         },
         "additionalProperties": false
       },
-      "CreateRecipeDto": {
+      "CreateCommentDto": {
+        "required": [
+          "content"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
+          "content": {
+            "maxLength": 2000,
+            "minLength": 0,
+            "type": "string"
           },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "categoryId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "prepTimeMinutes": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "cookTimeMinutes": {
+          "parentCommentId": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
-          },
-          "servings": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "imageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "videoUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "regionOfOrigin": {
-            "type": "string",
-            "nullable": true
-          },
-          "recipeIngredient": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CreateRecipeIngredientDto"
-            },
-            "nullable": true
-          },
-          "recipeInstruction": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CreateRecipeInstructionDto"
-            },
             "nullable": true
           }
         },
@@ -568,7 +1023,8 @@
           },
           "estimatedMinutes": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -605,63 +1061,6 @@
         },
         "additionalProperties": false
       },
-      "RegisterDto": {
-        "required": [
-          "email",
-          "firstName",
-          "lastName",
-          "password"
-        ],
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "password": {
-            "type": "string",
-            "nullable": true
-          },
-          "bio": {
-            "type": "string",
-            "nullable": true
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "gender": {
-            "type": "string",
-            "nullable": true
-          },
-          "location": {
-            "type": "string",
-            "nullable": true
-          },
-          "phone": {
-            "type": "string",
-            "nullable": true
-          },
-          "joinedDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "profilePictureUrl": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "ResetPasswordDto": {
         "required": [
           "confirmPassword",
@@ -691,59 +1090,16 @@
         },
         "additionalProperties": false
       },
-      "UpdateRecipeDto": {
+      "UpdateCommentDto": {
+        "required": [
+          "content"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "categoryId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "prepTimeMinutes": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "cookTimeMinutes": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "servings": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "imageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "videoUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "regionOfOrigin": {
-            "type": "string",
-            "nullable": true
-          },
-          "recipeIngredient": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CreateRecipeIngredientDto"
-            },
-            "nullable": true
-          },
-          "recipeInstruction": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CreateRecipeInstructionDto"
-            },
-            "nullable": true
+          "content": {
+            "maxLength": 2000,
+            "minLength": 0,
+            "type": "string"
           }
         },
         "additionalProperties": false

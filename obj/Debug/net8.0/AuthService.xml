@@ -9,6 +9,15 @@
             This is the authentication section for user manangement.
             </summary>
         </member>
+        <member name="M:AuthService.Controllers.CommentsController.UpdateComment(System.Int32,System.Int32,AuthService.DTOs.AppDtos.Comments.UpdateCommentDto)">
+            <summary>
+            Editing a comment by the comment writer
+            </summary>
+            <param name="recipeId">The recipe to which the comment belongs</param>
+            <param name="commentId">The comment that is being edited</param>
+            <param name="dto">The update block with the necessary fields for updating the comment</param>
+            <returns>A response body of the edited comment with the new comment, time, and status of edit</returns>
+        </member>
         <member name="T:AuthService.Controllers.IngredientsController">
             <summary>
             This controller concerns ingredient information and very important nutritional content
@@ -21,14 +30,14 @@
             <param name="recipeId"></param>
             <returns></returns>
         </member>
-        <member name="M:AuthService.Controllers.RecipiesController.GetRecipeById(System.Int32)">
+        <member name="M:AuthService.Controllers.RecipesController.GetRecipeById(System.Int32)">
             <summary>
             Retrieving a recipe by its ID
             </summary>
             <param name="id"></param>
             <returns>A recipe with its details</returns>
         </member>
-        <member name="M:AuthService.Controllers.RecipiesController.AddRecipe(AuthService.DTOs.AppDtos.RecipeDto.CreateRecipeDto)">
+        <member name="M:AuthService.Controllers.RecipesController.AddRecipe(AuthService.DTOs.AppDtos.RecipeDto.CreateRecipeDto)">
             <summary>
             Creating recipe alongside the ingredients and instructions by a contributor
             </summary>
@@ -43,7 +52,7 @@
             <param name="dto">A DTO for the creation of the recipe</param>
             <returns>A recipe response body</returns>
         </member>
-        <member name="M:AuthService.Controllers.RecipiesController.UpdateRecipe(System.Int32,AuthService.DTOs.AppDtos.Recipe.UpdateRecipeDto)">
+        <member name="M:AuthService.Controllers.RecipesController.UpdateRecipe(System.Int32,AuthService.DTOs.AppDtos.Recipe.UpdateRecipeDto)">
             <summary>
             Updating the recipe alongside ingredients and instructions
             </summary>
@@ -81,6 +90,42 @@
             <inheritdoc />
         </member>
         <member name="M:AuthService.Migrations.addRecipeLikes.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:AuthService.Migrations.AddRecipeRating">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.AddRecipeRating.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.AddRecipeRating.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.AddRecipeRating.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:AuthService.Migrations.AddCommentSupportOnRecipes">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.AddCommentSupportOnRecipes.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.AddCommentSupportOnRecipes.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.AddCommentSupportOnRecipes.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:AuthService.Migrations.madeestimateMinutesNullInInstructions">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.madeestimateMinutesNullInInstructions.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.madeestimateMinutesNullInInstructions.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:AuthService.Migrations.madeestimateMinutesNullInInstructions.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="M:AuthService.Services.Nutrition.INutritionCalculator.CalculateRecipeNutrition(System.Collections.Generic.ICollection{AuthService.Models.AppModels.RecipeIngredient},System.Int32)">

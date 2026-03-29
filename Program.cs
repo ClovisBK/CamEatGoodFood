@@ -7,6 +7,7 @@ using AuthService.Services.Nutrition;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -110,13 +111,14 @@ builder.Services.AddSwaggerGen(c =>
 //    await RoleSeeder.SeedAsync(roleManager);
 //}
 // Configure the HTTP request pipeline.
+builder.Services.AddScoped<BlobStorageService>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("All",
+    options.AddPolicy("AllowReactApp",
         builder =>
         {
-            builder.WithOrigins("URL passes here")
+            builder.WithOrigins("http://localhost:5000")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -130,7 +132,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowReactApp");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

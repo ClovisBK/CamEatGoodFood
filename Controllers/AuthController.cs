@@ -26,7 +26,7 @@ namespace AuthService.Controllers
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
         private readonly ILogger<AuthController> _logger;
-
+        private readonly BlobStorageService _blobStorageService;
         public AuthController(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
@@ -34,7 +34,8 @@ namespace AuthService.Controllers
             IConfiguration configuration,
             IEmailService emailService,
             ILogger<AuthController> logger,
-            AppDbContext context)
+            AppDbContext context,
+            BlobStorageService blobStorageService)
         {
             _context = context;
             _userManager = userManager;
@@ -43,14 +44,28 @@ namespace AuthService.Controllers
             _configuration = configuration;
             _emailService = emailService;
             _logger = logger;
+            _blobStorageService = blobStorageService;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDto dto)
+        public async Task<IActionResult> Register([FromForm] RegisterDto dto)
         {
             var userExists = await _userManager.FindByEmailAsync(dto.Email);
             if (userExists != null)
                 return BadRequest("Email already in use");
+
+            string profileImage = string.Empty;
+
+            try
+            {
+                if(dto.ProfilePictureFile != null)
+                {
+                    profileImage = await _blobStorageService.UploadFileAsync(dto.ProfilePictureFile, "image");
+                }
+            }catch(InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
             var user = new ApplicationUser
             {
@@ -64,6 +79,7 @@ namespace AuthService.Controllers
                 JoinedDate = DateTime.UtcNow,
                 Gender = dto.Gender,
                 DateOfBirth = dto.DateOfBirth,
+                ProfilePictureUrl = profileImage,
 
             };
 
@@ -167,7 +183,7 @@ namespace AuthService.Controllers
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var encodingToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
-                var frontendBaseUrl = _configuration["Frontend:BaseUrl"] ?? "http://cameatwell.vercel.app"; //This is just a temporary link that doesn't exist yet
+                var frontendBaseUrl = _configuration["Frontend:BaseUrl"] ?? "http://localhost:5000"; //This is just a temporary link that doesn't exist yet
                 var resetUrl = $"{frontendBaseUrl}/reset-password?email={Uri.EscapeDataString(user.Email!)}&token={encodingToken}";
 
                 await _emailService.SendPasswordResetEmailAsync(user.Email!, resetUrl);

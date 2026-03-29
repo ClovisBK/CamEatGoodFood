@@ -12,8 +12,8 @@ namespace AuthService.DTOs.AppDtos.RecipeDto
         public int PrepTimeMinutes { get; set; }
         public int? CookTimeMinutes { get; set; }
         public int Servings { get; set; } // this is what will determine distribution of nutrients accordinly
-        public string? ImageUrl { get; set; }
-        public string? VideoUrl { get; set; }
+        public IFormFile? ImageFile { get; set; }
+        public IFormFile? VideoFile { get; set; }
         public string? RegionOfOrigin { get; set; }
 
         public ICollection<CreateRecipeIngredientDto>? RecipeIngredient { get; set; }

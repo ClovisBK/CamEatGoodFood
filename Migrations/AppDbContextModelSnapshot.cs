@@ -1782,7 +1782,14 @@ namespace AuthService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<double>("AverageRating")
+                        .HasPrecision(3, 2)
+                        .HasColumnType("float(3)");
+
                     b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CommentCount")
                         .HasColumnType("int");
 
                     b.Property<int?>("CookTimeMinutes")
@@ -1808,6 +1815,9 @@ namespace AuthService.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PrepTimeMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RatingCount")
                         .HasColumnType("int");
 
                     b.Property<string>("RegionOfOrigin")
@@ -1884,6 +1894,52 @@ namespace AuthService.Migrations
                         });
                 });
 
+            modelBuilder.Entity("AuthService.Models.AppModels.RecipeComment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ParentCommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("isEdited")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentCommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("RecipeId", "ParentCommentId", "CreatedAt");
+
+                    b.ToTable("RecipeComments");
+                });
+
             modelBuilder.Entity("AuthService.Models.AppModels.RecipeIngredient", b =>
                 {
                     b.Property<int>("Id")
@@ -1930,7 +1986,7 @@ namespace AuthService.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EstimatedMinutes")
+                    b.Property<int?>("EstimatedMinutes")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsOptional")
@@ -1975,6 +2031,40 @@ namespace AuthService.Migrations
                         .IsUnique();
 
                     b.ToTable("RecipeLikes");
+                });
+
+            modelBuilder.Entity("AuthService.Models.AppModels.RecipeRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("RecipeId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("RecipeRatings");
                 });
 
             modelBuilder.Entity("AuthService.Models.ApplicationUser", b =>
@@ -2076,23 +2166,23 @@ namespace AuthService.Migrations
                             Id = "100",
                             AccessFailedCount = 0,
                             Bio = "I am a certified chef that works with tasty foods",
-                            ConcurrencyStamp = "73f324dd-7a70-4e55-8f76-2cba6d69f48b",
+                            ConcurrencyStamp = "491ac417-e8d8-4a81-80f5-d9b72f28989b",
                             DateOfBirth = new DateTime(1992, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "wakebeh14@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Wa Kebeh",
                             Gender = "Male",
-                            JoinedDate = new DateTime(2026, 3, 11, 6, 59, 7, 593, DateTimeKind.Utc).AddTicks(4581),
+                            JoinedDate = new DateTime(2026, 3, 27, 10, 32, 59, 322, DateTimeKind.Utc).AddTicks(2603),
                             LastName = "Mbong",
                             Location = "Yaounde",
                             LockoutEnabled = false,
                             NormalizedEmail = "WAKEBEH14@GMAIL.COM",
                             NormalizedUserName = "ADMIN@SYSTEM.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIU3rt1kphQwFexdH5sKmHh9TNHkQ6cpYH3N625IwqRFDPa3pw7dyQHWiLXs8jrb3Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGnnNiogRTshCT9PSP7U3LBCGb1DesMfj9HLVotF8FmsvtBe9230a9d8wU1OR21iCg==",
                             Phone = "676455676",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "myphoto.jpg",
-                            SecurityStamp = "4fc8a98d-622d-4727-bbb8-336fe06bbc55",
+                            SecurityStamp = "c357cd94-fc71-4e91-aa08-53314a0c8745",
                             TwoFactorEnabled = false,
                             UserName = "admin@system.com"
                         });
@@ -2305,6 +2395,32 @@ namespace AuthService.Migrations
                     b.Navigation("CreatedBy");
                 });
 
+            modelBuilder.Entity("AuthService.Models.AppModels.RecipeComment", b =>
+                {
+                    b.HasOne("AuthService.Models.AppModels.RecipeComment", "ParentComment")
+                        .WithMany("Replies")
+                        .HasForeignKey("ParentCommentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("AuthService.Models.AppModels.Recipe", "Recipe")
+                        .WithMany("Comments")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AuthService.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("ParentComment");
+
+                    b.Navigation("Recipe");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("AuthService.Models.AppModels.RecipeIngredient", b =>
                 {
                     b.HasOne("AuthService.Models.AppModels.Ingredient", "Ingredient")
@@ -2347,6 +2463,25 @@ namespace AuthService.Migrations
                 {
                     b.HasOne("AuthService.Models.AppModels.Recipe", "Recipe")
                         .WithMany("RecipeLikes")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("AuthService.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AuthService.Models.AppModels.RecipeRating", b =>
+                {
+                    b.HasOne("AuthService.Models.AppModels.Recipe", "Recipe")
+                        .WithMany("RecipeRatings")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -2424,11 +2559,20 @@ namespace AuthService.Migrations
 
             modelBuilder.Entity("AuthService.Models.AppModels.Recipe", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Instructions");
 
                     b.Navigation("RecipeIngredients");
 
                     b.Navigation("RecipeLikes");
+
+                    b.Navigation("RecipeRatings");
+                });
+
+            modelBuilder.Entity("AuthService.Models.AppModels.RecipeComment", b =>
+                {
+                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("AuthService.Models.ApplicationUser", b =>

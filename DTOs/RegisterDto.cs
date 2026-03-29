@@ -11,8 +11,7 @@
         public string? Gender { get; set; }
         public string? Location { get; set; }
         public string? Phone { get; set; }
-        public DateTime JoinedDate { get; set; } = DateTime.UtcNow;
-        public string? ProfilePictureUrl { get; set; }
+        public IFormFile? ProfilePictureFile { get; set; }
        
         
     }

@@ -4,6 +4,6 @@
     {
         public int StepNumber { get; set; }
         public string ActualInstruction { get; set; } = string.Empty;
-        public int EstimatedMinutes { get; set; }
+        public int? EstimatedMinutes { get; set; }
     }
 }
