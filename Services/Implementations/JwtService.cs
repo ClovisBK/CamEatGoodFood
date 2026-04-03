@@ -3,10 +3,11 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using AuthService.Models;
+using AuthService.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AuthService.Services
+namespace AuthService.Services.Implementations
 {
     public class JwtService : IJwtService
     {

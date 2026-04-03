@@ -2,7 +2,8 @@ using System.Reflection;
 using System.Text;
 using AuthService.Data;
 using AuthService.Models;
-using AuthService.Services;
+using AuthService.Services.Implementations;
+using AuthService.Services.Interfaces;
 using AuthService.Services.Nutrition;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<INutritionCalculator, NutritionCalculator>();
+builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -111,7 +113,7 @@ builder.Services.AddSwaggerGen(c =>
 //    await RoleSeeder.SeedAsync(roleManager);
 //}
 // Configure the HTTP request pipeline.
-builder.Services.AddScoped<BlobStorageService>();
+
 
 builder.Services.AddCors(options =>
 {

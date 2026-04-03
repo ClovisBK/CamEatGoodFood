@@ -13,7 +13,8 @@ using AuthService.DTOs.AppDtos.RecipeIngredientDto;
 using AuthService.DTOs.AppDtos.RecipeInstructionDto;
 using AuthService.DTOs.AppDtos.User;
 using AuthService.Models.AppModels;
-using AuthService.Services;
+using AuthService.Services.Implementations;
+using AuthService.Services.Interfaces;
 using AuthService.Services.Nutrition;
 using AuthService.Services.Nutrition.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -31,13 +32,13 @@ namespace AuthService.Controllers
         private readonly AppDbContext _context;
         private readonly ILogger<RecipesController> _logger;
         private readonly INutritionCalculator _nutritionCalculator;
-        private readonly BlobStorageService _blobService;
+        private readonly IBlobStorageService _blobService;
 
         public RecipesController(
             AppDbContext context,
             ILogger<RecipesController> logger,
             INutritionCalculator nutrition,
-            BlobStorageService blobService
+            IBlobStorageService blobService
             )
         {
             _context = context;
@@ -92,12 +93,12 @@ namespace AuthService.Controllers
             {
                 recipes.RemoveAt(recipes.Count - 1);
             }
-            int? nexCursor = recipes.Any() ? recipes.Last().Id : (int?)null;
+            int? nextCursor = recipes.Any() ? recipes.Last().Id : (int?)null;
 
             return Ok(new
             {
                 recipes,
-                nexCursor,
+                nextCursor,
                 hasMore,
                 count = recipes.Count
             });

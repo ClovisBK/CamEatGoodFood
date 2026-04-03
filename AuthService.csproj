@@ -42,6 +42,8 @@
 
   <ItemGroup>
     <Folder Include="DTOs\AppDtos\Recipe\NewFolder\" />
+    <Folder Include="Repositories\Interfaces\" />
+    <Folder Include="Repositories\Implementations\" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,9 @@
 ﻿using System.Text;
 using AuthService.Data;
-using AuthService.DTOs;
+using AuthService.DTOs.AuthDtos;
 using AuthService.Models;
-using AuthService.Services;
+using AuthService.Services.Implementations;
+using AuthService.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -26,7 +27,7 @@ namespace AuthService.Controllers
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
         private readonly ILogger<AuthController> _logger;
-        private readonly BlobStorageService _blobStorageService;
+        private readonly IBlobStorageService _blobStorageService;
         public AuthController(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
@@ -35,7 +36,7 @@ namespace AuthService.Controllers
             IEmailService emailService,
             ILogger<AuthController> logger,
             AppDbContext context,
-            BlobStorageService blobStorageService)
+            IBlobStorageService blobStorageService)
         {
             _context = context;
             _userManager = userManager;

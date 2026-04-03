@@ -1,10 +1,11 @@
-﻿using Azure.Storage;
+﻿using AuthService.Services.Interfaces;
+using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 
-namespace AuthService.Services
+namespace AuthService.Services.Implementations
 {
-    public class BlobStorageService
+    public class BlobStorageService : IBlobStorageService
     {
         private readonly BlobContainerClient _containerClient;
 

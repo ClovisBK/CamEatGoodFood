@@ -1,9 +1,9 @@
-﻿
+﻿using AuthService.Services.Interfaces;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 
-namespace AuthService.Services
+namespace AuthService.Services.Implementations
 {
     public class EmailService : IEmailService
     {
