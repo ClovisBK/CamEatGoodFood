@@ -40,6 +40,8 @@ namespace AuthService.Services.Implementations
                 _uow.Ratings.Update(existingRating);
                 _logger.LogInformation("User updated recipe {RecipeId} with {Score} stars", recipeId, score);
             }
+            await _uow.CompleteAsync();
+
             await RecalculateAndUpdateRecipeAsync(recipeId, recipe);
 
             await _uow.CompleteAsync();
@@ -60,6 +62,8 @@ namespace AuthService.Services.Implementations
             if(existingRating is null) return false;
 
             _uow.Ratings.Delete(existingRating);
+
+            await _uow.CompleteAsync();
 
             await RecalculateAndUpdateRecipeAsync(recipeId, recipe);
 

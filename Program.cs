@@ -2,6 +2,8 @@ using System.Reflection;
 using System.Text;
 using AuthService.Data;
 using AuthService.Models;
+using AuthService.Repositories.Implementations;
+using AuthService.Repositories.Interfaces;
 using AuthService.Services.Implementations;
 using AuthService.Services.Interfaces;
 using AuthService.Services.Nutrition;
@@ -20,6 +22,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<INutritionCalculator, NutritionCalculator>();
+builder.Services.AddScoped<IRatingService, RatingService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>

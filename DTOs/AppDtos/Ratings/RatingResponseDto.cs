@@ -1,6 +1,6 @@
 ﻿namespace AuthService.DTOs.AppDtos.Ratings
 {
-    public class ReatingResponseDto
+    public class RatingResponseDto
     {
         public double AverageRating { get; set; }
         public int RatingCount { get; set; }
